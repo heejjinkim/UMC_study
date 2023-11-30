@@ -6,14 +6,19 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.spring.apiPayload.code.status.ErrorStatus;
 import umc.spring.apiPayload.exception.handler.MemberHandler;
 import umc.spring.apiPayload.exception.handler.MissionHandler;
+import umc.spring.apiPayload.exception.handler.StoreHandler;
 import umc.spring.converter.MemberMissionConverter;
+import umc.spring.converter.MissionConverter;
 import umc.spring.domain.Member;
 import umc.spring.domain.Mission;
+import umc.spring.domain.Store;
 import umc.spring.domain.mapping.MemberMission;
 import umc.spring.repository.MemberMissionRepository;
 import umc.spring.repository.MemberRepository;
 import umc.spring.repository.MissionRepository;
+import umc.spring.repository.StoreRepository;
 import umc.spring.web.dto.MemberMissionRequestDTO;
+import umc.spring.web.dto.MissionRequestDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,8 @@ public class MissionServiceImpl implements MissionService{
     private final MissionRepository missionRepository;
 
     private final MemberRepository memberRepository;
+
+    private final StoreRepository storeRepository;
 
 
     @Override
@@ -40,5 +47,16 @@ public class MissionServiceImpl implements MissionService{
         MemberMission memberMission = MemberMissionConverter.toMemberMission(request, member, mission);
 
         return memberMissionRepository.save(memberMission);
+    }
+
+    @Override
+    @Transactional
+    public Mission createMission(MissionRequestDTO.CreateDTO request) {
+        Store store = storeRepository.findById(request.getStoreId())
+                .orElseThrow(() -> new StoreHandler(ErrorStatus.STORE_NOT_FOUND));
+
+        Mission mission = MissionConverter.toMission(request, store);
+
+        return missionRepository.save(mission);
     }
 }
