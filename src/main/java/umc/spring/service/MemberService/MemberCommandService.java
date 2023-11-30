@@ -1,4 +1,4 @@
-package umc.spring.service.TempService;
+package umc.spring.service.MemberService;
 
 import umc.spring.domain.Member;
 import umc.spring.web.dto.MemberRequestDTO;
