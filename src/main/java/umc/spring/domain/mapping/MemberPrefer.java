@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UserPrefer extends BaseEntity {
+public class MemberPrefer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +25,15 @@ public class UserPrefer extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
     private FoodCategory foodCategory;
+
+    public void setMember(Member member){
+        if(this.member != null)
+            member.getMemberPreferList().remove(this);
+        this.member = member;
+        member.getMemberPreferList().add(this);
+    }
+
+    public void setFoodCategory(FoodCategory foodCategory){
+        this.foodCategory = foodCategory;
+    }
 }

@@ -1,7 +1,7 @@
 package umc.spring.domain.mapping;
 
 import lombok.*;
-import umc.spring.domain.User;
+import umc.spring.domain.Member;
 import umc.spring.domain.Terms;
 import umc.spring.domain.base.BaseEntity;
 
@@ -20,7 +20,7 @@ public class MemberAgree extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private User user;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "terms_id")
