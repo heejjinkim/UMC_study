@@ -9,14 +9,8 @@ import umc.spring.apiPayload.code.status.ErrorStatus;
 import umc.spring.apiPayload.exception.handler.FoodCategoryHandler;
 import umc.spring.apiPayload.exception.handler.RegionHandler;
 import umc.spring.converter.StoreConverter;
-import umc.spring.domain.FoodCategory;
-import umc.spring.domain.Region;
-import umc.spring.domain.Review;
-import umc.spring.domain.Store;
-import umc.spring.repository.FoodCategoryRepository;
-import umc.spring.repository.RegionRepository;
-import umc.spring.repository.ReviewRepository;
-import umc.spring.repository.StoreRepository;
+import umc.spring.domain.*;
+import umc.spring.repository.*;
 import umc.spring.web.dto.StoreRequestDTO;
 
 import java.util.List;
@@ -31,6 +25,7 @@ public class StoreServiceImpl implements StoreService {
     private final RegionRepository regionRepository;
     private final FoodCategoryRepository foodCategoryRepository;
     private final ReviewRepository reviewRepository;
+    private final MissionRepository missionRepository;
 
     @Override
     @Transactional
@@ -63,5 +58,13 @@ public class StoreServiceImpl implements StoreService {
     public boolean existStore(List<Long> values) {
         return values.stream()
                 .allMatch(value -> storeRepository.existsById(value));
+    }
+
+    @Override
+    public Page<Mission> getMissionList(Long storeId, int page) {
+        Store store = storeRepository.findById(storeId).get();
+
+        Page<Mission> storePage = missionRepository.findAllByStore(store, PageRequest.of(page, 10));
+        return storePage;
     }
 }
