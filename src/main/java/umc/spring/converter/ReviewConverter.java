@@ -19,14 +19,4 @@ public class ReviewConverter {
                 .build();
     }
 
-    public static Review toReview(ReviewRequestDTO.JoinDto request, Member member, Store store){
-        return Review.builder()
-                .score(request.getScore())
-                .content(request.getContent())
-                .member(member)
-                .store(store)
-                .build();
-    }
-
-
 }
