@@ -9,12 +9,12 @@ import umc.spring.apiPayload.code.status.ErrorStatus;
 import umc.spring.apiPayload.exception.handler.FoodCategoryHandler;
 import umc.spring.converter.MemberConverter;
 import umc.spring.converter.MemberPreferConverter;
-import umc.spring.domain.FoodCategory;
-import umc.spring.domain.Member;
-import umc.spring.domain.Review;
-import umc.spring.domain.Store;
+import umc.spring.domain.*;
+import umc.spring.domain.enums.MissionStatus;
+import umc.spring.domain.mapping.MemberMission;
 import umc.spring.domain.mapping.MemberPrefer;
 import umc.spring.repository.FoodCategoryRepository;
+import umc.spring.repository.MemberMissionRepository;
 import umc.spring.repository.MemberRepository;
 import umc.spring.repository.ReviewRepository;
 import umc.spring.service.MemberService.MemberCommandService;
@@ -33,6 +33,8 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final FoodCategoryRepository foodCategoryRepository;
 
     private final ReviewRepository reviewRepository;
+
+    private final MemberMissionRepository memberMissionRepository;
 
     @Override
     @Transactional
@@ -61,7 +63,16 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     public Page<Review> getReviewList(Long memberId, Integer page) {
         Member member = memberRepository.findById(memberId).get();
 
-        Page<Review> StorePage = reviewRepository.findAllByMember(member, PageRequest.of(page, 10));
-        return StorePage;
+        Page<Review> reviewPage = reviewRepository.findAllByMember(member, PageRequest.of(page, 10));
+        return reviewPage;
+    }
+
+    @Override
+    public Page<MemberMission> getMemberMissionList(Long memberId, String missionStatus, Integer page) {
+        Member member = memberRepository.findById(memberId).get();
+        MissionStatus status = MissionStatus.valueOf(missionStatus);
+
+        Page<MemberMission> missionPage = memberMissionRepository.findAllByMemberAndStatus(member, status, PageRequest.of(page, 10));
+        return missionPage;
     }
 }
